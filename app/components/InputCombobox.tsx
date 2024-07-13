@@ -18,7 +18,7 @@ export type InputComboboxProps = {
   label: string;
   value?: string;
   innerRef?: (ref: HTMLInputElement) => void;
-  onChange: (value: Option) => void;
+  onChange: (value: string) => void;
   onBlur: () => void;
   disabled?: boolean;
   /**
@@ -51,10 +51,12 @@ export const InputCombobox: FC<InputComboboxProps> = ({
         );
 
   const handleChange = (selectedValue: string) => {
-    const option = options.find((option) => option.value === selectedValue);
+    const hasSelectedValue = options.some(
+      (option) => option.value === selectedValue,
+    );
 
-    if (option) {
-      onChange(option);
+    if (hasSelectedValue) {
+      onChange(selectedValue);
       return;
     }
 
@@ -63,7 +65,7 @@ export const InputCombobox: FC<InputComboboxProps> = ({
         return;
       }
 
-      onChange(newOption);
+      onChange(newOption.value);
       options.push(newOption);
     });
   };
@@ -79,7 +81,9 @@ export const InputCombobox: FC<InputComboboxProps> = ({
       >
         <ComboboxInput
           aria-label={label}
-          displayValue={(option) => (option as Option)?.label}
+          displayValue={(value: string) =>
+            options.find((opt) => opt.value === value)?.label || value
+          }
           onChange={(event) => {
             setQuery(event.target.value);
           }}
