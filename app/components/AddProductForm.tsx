@@ -1,6 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import {
   ControlledCheckbox,
@@ -8,6 +9,7 @@ import {
   ControlledNumber,
   ControlledSelect,
   ControlledText,
+  ToastContainer,
 } from "@/app/components";
 
 const UNITS = [
@@ -39,55 +41,67 @@ export const AddProductForm = () => {
   });
 
   const onSubmit = (data: Product) => {
-    console.log(data);
+    Promise.resolve(data).then((data) => {
+      console.log("Submitted data:", data);
+      toast("Record added", { type: "success" });
+    });
   };
 
   const onAddUnit = (description: string) =>
     Promise.resolve({
       value: Math.random().toString(36).substr(2, 9),
       label: description,
+    }).then((unit) => {
+      console.log("Added new unit:", unit);
+      toast(`The '${unit.label}' was added as a new measuring unit.`, {
+        type: "success",
+      });
+      return unit;
     });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div>
-        <ControlledCheckbox
-          name="isProduct"
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div>
+          <ControlledCheckbox
+            name="isProduct"
+            control={control}
+            label="Product"
+          />
+          <ControlledCheckbox
+            name="isService"
+            control={control}
+            label="Service"
+          />
+        </div>
+        <ControlledText name="name" control={control} label="Product Name" />
+        <ControlledText
+          name="description"
           control={control}
-          label="Product"
+          label="Description"
         />
-        <ControlledCheckbox
-          name="isService"
+        <ControlledCombobox
+          name="unitId"
           control={control}
-          label="Service"
+          label="Units"
+          options={[...UNITS]}
+          onAddNew={onAddUnit}
         />
-      </div>
-      <ControlledText name="name" control={control} label="Product Name" />
-      <ControlledText
-        name="description"
-        control={control}
-        label="Description"
-      />
-      <ControlledCombobox
-        name="unitId"
-        control={control}
-        label="Units"
-        options={[...UNITS]}
-        onAddNew={onAddUnit}
-      />
-      <ControlledNumber
-        name="price"
-        control={control}
-        label=" Unit Price (net)"
-      />
-      <ControlledSelect
-        name="vat"
-        control={control}
-        label="VAT"
-        options={VAT}
-      />
+        <ControlledNumber
+          name="price"
+          control={control}
+          label=" Unit Price (net)"
+        />
+        <ControlledSelect
+          name="vat"
+          control={control}
+          label="VAT"
+          options={VAT}
+        />
 
-      <button type="submit">Add new</button>
-    </form>
+        <button type="submit">Add new</button>
+      </form>
+      <ToastContainer />
+    </>
   );
 };

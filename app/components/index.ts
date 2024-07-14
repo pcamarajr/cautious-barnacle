@@ -9,3 +9,4 @@ export * from "./InputCombobox";
 export * from "./InputNumber";
 export * from "./InputSelect";
 export * from "./InputText";
+export * from "./ToastContainer";
