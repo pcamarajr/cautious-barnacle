@@ -1,3 +1,4 @@
+export * from "./AddProductDialogButton";
 export * from "./AddProductForm";
 export * from "./ControlledCheckbox";
 export * from "./ControlledCombobox";
