@@ -9,11 +9,6 @@ import {
   ComboboxOptions,
 } from "@headlessui/react";
 
-type Option = {
-  label: string;
-  value: string;
-};
-
 export type InputComboboxProps = {
   label: string;
   value?: string;
@@ -25,8 +20,8 @@ export type InputComboboxProps = {
    * An optional async callback to display support for adding new items.
    * @param value
    */
-  onAddNew?: (value: string) => Promise<Option | undefined>;
-  options: Option[];
+  onAddNew?: (value: string) => Promise<SelectOption>;
+  options: SelectOption[];
 };
 
 export const InputCombobox: FC<InputComboboxProps> = ({
@@ -60,14 +55,12 @@ export const InputCombobox: FC<InputComboboxProps> = ({
       return;
     }
 
-    onAddNew?.(query).then((newOption) => {
-      if (!newOption) {
-        return;
-      }
-
-      onChange(newOption.value);
-      options.push(newOption);
-    });
+    if (!hasSelectedValue && onAddNew) {
+      onAddNew(query).then((newOption) => {
+        onChange(newOption.value);
+        setQuery("");
+      });
+    }
   };
 
   return (

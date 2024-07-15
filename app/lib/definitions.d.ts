@@ -13,3 +13,8 @@ interface Unit {
   id: string;
   name: string;
 }
+
+interface SelectOption {
+  label: string;
+  value: string;
+}
