@@ -1,7 +1,9 @@
-import { Bounce, ToastContainer as ToastifyContainer } from "react-toastify";
+import { Bounce, ToastContainer } from "react-toastify";
 
-export const ToastContainer = () => (
-  <ToastifyContainer
+import "react-toastify/dist/ReactToastify.css";
+
+export const ToastProvider = () => (
+  <ToastContainer
     position="bottom-left"
     autoClose={false}
     newestOnTop={false}

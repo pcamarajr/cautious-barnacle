@@ -8,7 +8,6 @@ import {
   ControlledNumber,
   ControlledSelect,
   ControlledText,
-  ToastContainer,
   UnitComboBox,
 } from "@/app/components";
 import { useMutateProduct } from "@/app/services";
@@ -43,42 +42,39 @@ export const AddProductForm = () => {
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <ControlledCheckbox
-            name="isProduct"
-            control={control}
-            label="Product"
-          />
-          <ControlledCheckbox
-            name="isService"
-            control={control}
-            label="Service"
-          />
-        </div>
-        <ControlledText name="name" control={control} label="Product Name" />
-        <ControlledText
-          name="description"
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <ControlledCheckbox
+          name="isProduct"
           control={control}
-          label="Description"
+          label="Product"
         />
-        <UnitComboBox name="unitId" control={control} label="Units" />
-        <ControlledNumber
-          name="price"
+        <ControlledCheckbox
+          name="isService"
           control={control}
-          label=" Unit Price (net)"
+          label="Service"
         />
-        <ControlledSelect
-          name="vat"
-          control={control}
-          label="VAT"
-          options={VAT}
-        />
+      </div>
+      <ControlledText name="name" control={control} label="Product Name" />
+      <ControlledText
+        name="description"
+        control={control}
+        label="Description"
+      />
+      <UnitComboBox name="unitId" control={control} label="Units" />
+      <ControlledNumber
+        name="price"
+        control={control}
+        label=" Unit Price (net)"
+      />
+      <ControlledSelect
+        name="vat"
+        control={control}
+        label="VAT"
+        options={VAT}
+      />
 
-        <button type="submit">Add new</button>
-      </form>
-      <ToastContainer />
-    </>
+      <button type="submit">Add new</button>
+    </form>
   );
 };

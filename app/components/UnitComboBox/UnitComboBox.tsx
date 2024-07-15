@@ -1,6 +1,7 @@
 "use client";
 
 import { FieldPathByValue, FieldValues } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import { ControlledCombobox, ControlledComboboxProps } from "@/app/components";
 import { useFetchUnits, useMutateUnit } from "@/app/services";
@@ -30,8 +31,10 @@ export const UnitComboBox = <
     new Promise<SelectOption>((resolve, reject) => {
       mutate(name, {
         onSuccess: (unit) => {
-          const newOption = getUnitOption(unit);
-          resolve(newOption);
+          toast(`The '${unit.name}' was added as a new measuring unit.`, {
+            type: "success",
+          });
+          resolve(getUnitOption(unit));
         },
       });
     });
