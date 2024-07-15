@@ -1,0 +1,182 @@
+@startuml
+!theme plain
+
+skinparam backgroundColor #EEF2F7
+skinparam component {
+  BackgroundColor #FFFFFF
+  ArrowColor #2378A3
+  BorderColor #2378A3
+}
+
+package "External Components" {
+    component "HTML Elements" {
+        component "HTMLLabelElement"
+        component "HTMLInputElement"
+        component "HTMLButtonElement"
+    }
+    component "react-hook-form" {
+        component "useControl" as ReactHookFormUseController
+        component "useForm" as ReactHookFormUseForm
+    }
+    component "@headlessui/react" {
+        component "Dialog" as HeadlessUIDialog
+        component "Combobox" as HeadlessUICombobox
+        component "Select" as HeadlessUISelect
+    }
+    component "react-toastify" {
+        component "ToastContainer" as ReactToastifyContainer
+        component "toast" as ReactToastifyToast
+    }
+    component "@tanstack/react-query" {
+        component "QueryClient" as ReactQueryClient
+        component "useQuery" as ReactQueryUseQuery
+        component "useMutation" as ReactQueryUseMutation
+    }
+}
+
+package Data {
+    package API {
+        component "Products API" as ProductsAPI
+        component "Units API" as UnitsAPI
+    }
+}
+
+package App <<React>> {
+    component AppRoot
+
+    package Components {
+      package Inputs {
+        component InputCheckbox
+        component InputCombobox
+        component InputNumber
+        component InputSelect
+        component InputText
+      }
+
+      package Controlled {
+        component ControlledCheckbox
+        component ControlledCombobox
+        component ControlledNumber
+        component ControlledSelect
+        component ControlledText
+      }
+
+      package Custom {
+        component UnitComboBox
+        component AddProductForm
+        component AddProductDialogButton
+      }
+    }
+
+    package Providers {
+        component QueryClientProvider
+        component ToastProvider
+    }
+
+    package Pages {
+        component ProductsPage
+    }
+
+    package Services {
+        package Units {
+            component "useFetchUnits" as UseFetchUnits
+            component "useMutateUnit" as UseMutateUnit
+        }
+        package Products {
+            component "useMutateProduct" as UseMutateProduct
+        }
+    }
+}
+
+' Routing relationship
+AppRoot ..> ProductsPage : renders >>
+
+' Providers relations
+Providers --> AppRoot : wraps
+
+QueryClientProvider --> ReactQueryClient : uses
+QueryClientProvider --> App : provides state management
+
+ToastProvider --> ReactToastifyContainer : uses
+ToastProvider --> App : provides toast notifications
+
+' InputText component
+InputText --> HTMLLabelElement : uses
+InputText --> HTMLInputElement : uses
+
+' InputNumber component
+InputNumber --> HTMLLabelElement : uses
+InputNumber --> HTMLInputElement : uses
+
+' InputCheckbox component
+InputCheckbox --> HTMLLabelElement : uses
+InputCheckbox --> HTMLInputElement : uses
+
+' InputSelect component
+InputSelect --> HTMLLabelElement : uses
+InputSelect --> HeadlessUISelect : uses
+
+' InputCombobox component
+InputCombobox --> HTMLLabelElement : uses
+InputCombobox --> HeadlessUICombobox : uses
+
+' ControlledText component
+ControlledText --> ReactHookFormUseController : uses
+ControlledText --> InputText : uses
+
+' ControlledNumber component
+ControlledNumber --> ReactHookFormUseController : uses
+ControlledNumber --> InputNumber : uses
+
+' ControlledCheckbox component
+ControlledCheckbox --> ReactHookFormUseController : uses
+ControlledCheckbox --> InputCheckbox : uses
+
+' ControlledSelect component
+ControlledSelect --> ReactHookFormUseController : uses
+ControlledSelect --> InputSelect : uses
+
+' ControlledCombobox component
+ControlledCombobox --> ReactHookFormUseController : uses
+ControlledCombobox --> InputCombobox : uses
+
+' UnitComboBox component
+UnitComboBox --> ReactToastifyToast : uses
+UnitComboBox --> UseFetchUnits : uses
+UnitComboBox --> UseMutateUnit : uses
+UnitComboBox --> ControlledCombobox : uses
+
+' AddProductForm component
+AddProductForm --> ReactHookFormUseForm : uses
+AddProductForm --> ReactToastifyToast : uses
+AddProductForm --> UseMutateProduct : uses
+AddProductForm --> ControlledText : uses
+AddProductForm --> ControlledNumber : uses
+AddProductForm --> ControlledCheckbox : uses
+AddProductForm --> UnitComboBox : uses
+AddProductForm --> ControlledSelect : uses
+
+' AddProductDialogButton component relations
+AddProductDialogButton --> HTMLButtonElement : uses
+AddProductDialogButton --> HeadlessUIDialog : uses
+AddProductDialogButton --> AddProductForm : uses
+
+' ProductsPage component
+ProductsPage --> AddProductDialogButton : uses
+
+' useMutateProduct service
+UseMutateProduct --> ReactQueryUseMutation : uses
+UseMutateProduct --> ReactQueryClient : uses
+UseMutateProduct --> ProductsAPI : "mutationFn -> POST Product"
+
+' useFetchUnits service
+UseFetchUnits --> ReactQueryUseQuery : uses
+UseFetchUnits --> ReactQueryClient : uses
+UseFetchUnits --> UnitsAPI : "queryFn -> GET Units"
+
+' useMutateUnit service
+UseMutateUnit --> ReactQueryUseMutation : uses
+UseMutateUnit --> ReactQueryClient : uses
+UseMutateUnit --> UnitsAPI : "mutationFn -> POST Unit"
+
+@enduml
